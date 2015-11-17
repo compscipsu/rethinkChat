@@ -1,0 +1,10 @@
+{
+  "name": "rethinkChat",
+  "version": "1.0.0",
+  "description": "A chat server backed by rethinkDb",
+  "author": "compscipsu@gmail.com",
+  "dependencies": {
+     "rethinkdb": "2.2.0",
+     "socket.io": "1.3.7"
+  }
+}
