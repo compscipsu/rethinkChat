@@ -1,20 +1,23 @@
 var http = require('http'),
     fs = require('fs'),
-    r = require('rethinkdb');
+    r = require('rethinkdb'),
+    express = require('express'),
+    path = require('path'),
+    app = express();
 
-var app = http.createServer(function (request, response) {
-    fs.readFile("client.html", 'utf-8', function (error, data) {
-        response.writeHead(200, {'Content-Type': 'text/html'});
-        response.write(data);
-        response.end();
-    });
-}).listen(1337);
+app.get('/', function(req, res) {
+  res.sendfile('client.html');
+});
 
-var io = require('socket.io').listen(app);
+app.use(express.static(path.join(__dirname, 'client/assets')));
+
+var server = http.createServer(app).listen(1337);
+
+var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket) {
     socket.on('message_to_server', function(data) {
-	
+
 	r.connect({
 	    host: 'localhost',
 	    port: 28015,

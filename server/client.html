@@ -8,12 +8,13 @@
             document.getElementById("chatlog").innerHTML = ("<hr/>" +
             data['message'] + document.getElementById("chatlog").innerHTML);
         });
-        
+
         function sendMessage() {
         	var msg = document.getElementById("message_input").value;
 	        socketio.emit("message_to_server", { message : msg});
         }
         </script>
+        <link rel="stylesheet" href="./css/style.css" />
     </head>
     <body>
         <input type="text" id="message_input"/>
