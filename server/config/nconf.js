@@ -7,11 +7,9 @@ exports.init = function (nconf, serverPropertiesFN) {
 
   nconf.env();
 
-  fs.exists(serverPropertiesFN, function(exists){
-    if(exists){
-      nconf.file('user', serverPropertiesFN);
-    }
-  });
+  if(fs.existsSync(serverPropertiesFN)){
+    nconf.file('user', serverPropertiesFN);
+  }
 
   nconf.defaults({
     "port": "3003",
