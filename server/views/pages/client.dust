@@ -32,7 +32,7 @@
         <div class="col-md-12">
           <input type="text" id="message_input"/>
           <button id="send-message">Send Message</button><br>
-          <input type="text" id="room_input"/>
+          <input type="text" id="author"/>
           <label>Enter your username:</label>
         </div>
       </div>
