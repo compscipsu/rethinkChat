@@ -15,7 +15,7 @@ var fs = require('fs');
 var path = require('path');
 
 
-require('./config/nconf').init(nconf, path.join(__dirname, 'properties.json'));
+require(path.join(__dirname, 'config/nconf')).init(nconf, path.join(__dirname, 'properties.json'));
 
 
 
