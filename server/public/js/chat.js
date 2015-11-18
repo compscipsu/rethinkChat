@@ -45659,6 +45659,8 @@ angular.module('ui.utils',  [
       author = "Anonymous";
     }
     $('#chatlog').append("<hr/>" + author + ":" + message);
+    $(".messages").animate({ scrollTop: $('.messages')[0].scrollHeight}, 10);
+
   });
 
   socketio.on("add_room", function (data) {
@@ -45695,5 +45697,3 @@ angular.module('ui.utils',  [
     $('#room_input').html('');
   });
 });
-
-    

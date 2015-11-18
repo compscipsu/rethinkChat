@@ -7,30 +7,33 @@
 </head>
 <body>
 
-<div class="container-fluid">
-  <input type="text" id="author"/>Username
-  <br/>
-  <input type="text" id="room_input"/>
-  <button id="add-room">Add Room</button>
+<div class="container-fluid wrapper">
   <div class="row wrapper">
     <div class="col-md-2 rooms">
       <h2>Rooms</h2>
 
       <div id="rooms"></div>
+      <input type="text" id="room_input"/>
+      <button id="add-room">Add Room</button>
     </div>
     <div class="col-md-10 content">
       <div class="row messages">
-        <div class="col-md-12">
+        <div class="col-md-12 room-header">
           <h2><b>
             <div id="room_header"></div>
           </b></h2>
+        </div>
+        <div class="col-md-12">
           <div id="chatlog"></div>
+          <a href="#chatbottom"></a>
         </div>
       </div>
       <div class="row input">
         <div class="col-md-12">
           <input type="text" id="message_input"/>
-          <button id="send-message">Send Message</button>
+          <button id="send-message">Send Message</button><br>
+          <input type="text" id="room_input"/>
+          <label>Enter your username:</label>
         </div>
       </div>
     </div>
