@@ -1,45 +1,87 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript">
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
         var socketio = io.connect("127.0.0.1:1337");
-        socketio.on("message_to_client", function(data) {
-            document.getElementById("chatlog").innerHTML = ("<hr/>" +
-            data['message'] + document.getElementById("chatlog").innerHTML);
+        socketio.on("add_message", function(data) {
+            var message = data['message'];
+            var author = data['author'];
+            if (!author) {
+                author = "Anonymous";
+            }
+            document.getElementById("chatlog").innerHTML = ("<hr/>"
+            + author + ": "
+            + message
+            + document.getElementById("chatlog").innerHTML);
+        });
+
+        socketio.on("add_room", function(data) {
+            var rooms = document.getElementById("rooms");
+            rooms.appendChild(document.createElement('br'));
+
+            var a = document.createElement('a');
+            var linkText = document.createTextNode(data['message']);
+            a.appendChild(linkText);
+            a.title = data['message'];
+            a.onclick = function() {
+                document.getElementById("chatlog").innerHTML = '';
+                socketio.emit("join_room", { name : data['message']});
+                document.getElementById("room_header").innerHTML = data['message'];
+            };
+            rooms.appendChild(a);
         });
 
         function sendMessage() {
-        	var msg = document.getElementById("message_input").value;
-	        socketio.emit("message_to_server", { message : msg});
+            var msg = document.getElementById("message_input").value;
+            var room = document.getElementById("room_header").innerHTML;
+            var author = document.getElementById("author").value;
+            if (!author || author === '') {
+                author = "Anonymous";
+            }
+            socketio.emit("create_message", { message : msg, room: room, author: author});
+            document.getElementById("message_input").value = '';
         }
-        </script>
-        <link rel="stylesheet" href="./css/style.css" />
-    </head>
-    <body>
-        <input type="text" id="message_input"/>
-        <button onclick="sendMessage()">send</button>
-        <div id="chatlog"></div>
 
-        <div class="container-fluid">
-          <div class="row wrapper">
-            <div class="col-md-2 rooms">
+        function createRoom() {
+            var msg = document.getElementById("room_input").value;
+            socketio.emit("create_room", { name : msg});
+            document.getElementById("room_header").innerHTML = msg;
+            document.getElementById("chatlog").innerHTML = '';
+            document.getElementById("room_input").value = '';
+        }
 
-            </div>
-            <div class="col-md-10 content">
-              <div class="row messages">
-                <div class="col-md-12">
-                  this is where the messages go
-                </div>
-              </div>
-              <div class="row input">
-                <div class="col-md-12">
-                  this is the input
-                </div>
-              </div>
-            </div>
+    </script>
+    <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
 
-          </div>
+<div class="container-fluid">
+    <input type="text" id="author"/>Username
+    <br/>
+    <input type="text" id="room_input"/>
+    <button onclick="createRoom()">Add Room</button>
+    <div class="row wrapper">
+        <div class="col-md-2 rooms">
+            <h2>Rooms</h2>
+            <div id="rooms"></div>
         </div>
-    </body>
+        <div class="col-md-10 content">
+            <div class="row messages">
+                <div class="col-md-12">
+                    <h2><b><div id="room_header"></div></b></h2>
+                    <div id="chatlog"></div>
+                </div>
+            </div>
+            <div class="row input">
+                <div class="col-md-12">
+                    <input type="text" id="message_input"/>
+                    <button onclick="sendMessage()">Send Message</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
 </html>
