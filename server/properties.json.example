@@ -1,0 +1,6 @@
+{
+  "env": "DEV",
+  "port": "1337",
+  "js-minify": false
+
+}

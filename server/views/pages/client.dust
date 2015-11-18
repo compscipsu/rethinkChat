@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat{?minifyJS}.min{/minifyJS}.js"></script>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+
+<div class="container-fluid">
+  <input type="text" id="author"/>Username
+  <br/>
+  <input type="text" id="room_input"/>
+  <button id="add-room">Add Room</button>
+  <div class="row wrapper">
+    <div class="col-md-2 rooms">
+      <h2>Rooms</h2>
+
+      <div id="rooms"></div>
+    </div>
+    <div class="col-md-10 content">
+      <div class="row messages">
+        <div class="col-md-12">
+          <h2><b>
+            <div id="room_header"></div>
+          </b></h2>
+          <div id="chatlog"></div>
+        </div>
+      </div>
+      <div class="row input">
+        <div class="col-md-12">
+          <input type="text" id="message_input"/>
+          <button id="send-message">Send Message</button>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" value="{host}" id="io-host" />
+    <input type="hidden" value="{port}" id="io-port" />
+  </div>
+</div>
+</body>
+</html>

@@ -1,12 +1,35 @@
 module.exports = function(grunt) {
-
+  
+  var vendorJSFiles = [
+    'vendor/jquery-1.9.1.js',
+    'vendor/jquery.growler.js',
+    'vendor/bootstrap.js',
+    'vendor/lodash.js',
+    'vendor/moment.js',
+    'vendor/angular.js',
+    'vendor/angular-ui-router.js',
+    'vendor/angular-ui-utils.js',
+    'vendor/angular-datepicker.js',
+    'vendor/angular-growl-notifications.js'
+  ];
+  
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    concat: {
+      options: {
+        separator: ';'
+      },
+      dev: {
+        src: grunt.util._.union(vendorJSFiles, ['client/assets/js/**/*.js']),
+        dest: 'public/js/chat.js'
+      }
+    },
     uglify: {
-      build: {
-        src: 'client/assets/js/**/*.js',
-        dest: 'client/assets/app.min.js'
+      dist: {
+        files: {
+          'public/js/chat.min.js': ['public/js/chat.js']
+        }
       }
     },
     sass: {
@@ -15,7 +38,7 @@ module.exports = function(grunt) {
           style: 'compressed'
         },
         files: {
-          'client/assets/css/style.css': 'client/assets/scss/bootstrap.scss'
+          'public/css/style.css': 'client/assets/scss/bootstrap.scss'
         }
       }
     },
@@ -24,8 +47,8 @@ module.exports = function(grunt) {
     },
     watch: {
       scripts: {
-        files: ['client/assets/js/**/*.js'],
-        tasks: ['jshint', 'uglify'],
+        files: ['vendor/**/*', 'client/assets/js/**/*.js'],
+        tasks: ['jshint', 'concat', 'uglify']
       },
       css: {
         files: ['client/assets/scss/**/*.scss'],
