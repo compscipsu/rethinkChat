@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 
 exports.init = function (nconf, serverPropertiesFN) {
   'use strict';
@@ -6,9 +7,11 @@ exports.init = function (nconf, serverPropertiesFN) {
 
   nconf.env();
 
-  nconf.file('user', serverPropertiesFN);
-
-  // configure global properties
+  fs.exists(serverPropertiesFN, function(exists){
+    if(exists){
+      nconf.file('user', serverPropertiesFN);
+    }
+  });
 
   nconf.defaults({
     "port": "3003",

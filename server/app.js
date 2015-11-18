@@ -52,6 +52,12 @@ process.on('SIGTERM', function(){
 process.on('exit', function(){
   server.close();
 });
+
+process.on('uncaughtException', function(err){
+  console.log(err)
+  server.close();
+});
+
 console.log('booting application on ' + process.pid.toString());
 
 
