@@ -5,10 +5,28 @@ $(document).on('ready', function () {
   socketio.on("add_message", function (data) {
     var message = data.message;
     var author = data.author;
+    var time = new Date(data.time);
     if (!author) {
       author = "Anonymous";
     }
-    $('#chatlog').append("<hr/>" + author + ":" + message);
+
+    //I'm sure angular can do this somehow
+    var hourFormat = time.getHours() > 12 ? time.getHours() - 12 : time.getHours();
+    if (hourFormat < 10) {
+      hourFormat = '0' + hourFormat;
+    }
+    var ending = time.getHours() > 12 ? 'PM' : 'AM';
+
+    var minFormat = time.getMinutes();
+    if (minFormat < 10) {
+      minFormat = '0' + minFormat;
+    }
+
+    var secFormat = time.getSeconds();
+    if (secFormat < 10) {
+      secFormat = '0' + secFormat;
+    }
+    $('#chatlog').append("<hr/>" + author + "( " + hourFormat + ":" + minFormat + ":" + secFormat + " " + ending + " ):  " + message);
     $(".messages").animate({ scrollTop: $('.messages')[0].scrollHeight}, 10);
 
   });
