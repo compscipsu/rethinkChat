@@ -79,6 +79,7 @@ var socketIOInit = function() {
         if (err)
           console.log(err);
         else
+          data['time'] = RethinkDB.now();
           RethinkDB.table('message').insert(data).run(conn, function (err) {
             if (err)
               console.log(err);
@@ -106,7 +107,7 @@ var socketIOInit = function() {
       socket.join(data['name']);
 
       connectToDB(function (err, conn) {
-        RethinkDB.table('message').filter({room: data['name']}).run(conn, function (err, cursor) {
+        RethinkDB.table('message').filter({room: data['name']}).orderBy(RethinkDB.asc('time')).run(conn, function (err, cursor) {
           if (err)
             console.log(err);
           else
@@ -114,7 +115,7 @@ var socketIOInit = function() {
               if (err)
                 console.log(err);
 
-              socket.emit("add_message", {message: row['message'], author: row['author']})
+              socket.emit("add_message", {message: row['message'], author: row['author'], time: row['time']})
             });
         });
       });
@@ -150,7 +151,8 @@ var socketIOInit = function() {
 
           io.sockets.to(row['new_val']['room']).emit("add_message", {
             message: row['new_val']['message'],
-            author: row['new_val']['author']
+            author: row['new_val']['author'],
+            time: row['new_val']['time']
           })
         });
     });
