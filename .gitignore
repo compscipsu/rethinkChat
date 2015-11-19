@@ -31,4 +31,5 @@ properties.json
 
 #IntelliJ IDEA files
 *.iml
+**/.DS_Store
 .idea
