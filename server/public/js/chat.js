@@ -45655,10 +45655,11 @@ angular.module('ui.utils',  [
   socketio.on("add_message", function (data) {
     var message = data.message;
     var author = data.author;
+	var time = data.time;
     if (!author) {
       author = "Anonymous";
     }
-    $('#chatlog').append("<hr/>" + author + ":" + message);
+    $('#chatlog').append("<hr/>" + author + "(" + time + ") :" + message);
     $(".messages").animate({ scrollTop: $('.messages')[0].scrollHeight}, 10);
 
   });
