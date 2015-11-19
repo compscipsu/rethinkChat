@@ -45652,6 +45652,13 @@ angular.module('ui.utils',  [
   var IO_HOST = $('#io-host').text();
   var IO_PORT = $('#io-port').text();
   var socketio = io.connect(IO_HOST + ":" + IO_PORT);
+	window.onfocus = function() {
+		document.title = 'ReThync Chat';
+		window.active = true;
+	};
+	window.onblur = function() {
+		window.active = false;
+	};
   socketio.on("add_message", function (data) {
     var message = data.message;
     var author = data.author;
@@ -45659,6 +45666,9 @@ angular.module('ui.utils',  [
     if (!author) {
       author = "Anonymous";
     }
+		if(!window.active) {
+			document.title = 'NEW MESSAGE!';
+		}
 
     //I'm sure angular can do this somehow
     var hourFormat = time.getHours() > 12 ? time.getHours() - 12 : time.getHours();
@@ -45714,4 +45724,11 @@ angular.module('ui.utils',  [
     $('#chatlog').html('');
     $('#room_input').html('');
   });
+
+	$('#message_input').keypress(function (e) {
+		if (e.which == 13) {
+			$('#send-message').click();
+			return false;
+		}
+	});
 });

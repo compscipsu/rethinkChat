@@ -1,0 +1,16 @@
+2015-11-17T16:14:02.179283000 0.003308s notice: Recursively removing directory /Users/ahunton/projects/rethinkChat/rethinkdb_data/tmp
+2015-11-17T16:14:02.180302000 0.004331s notice: Initializing directory /Users/ahunton/projects/rethinkChat/rethinkdb_data
+2015-11-17T16:14:02.180369000 0.004394s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/ahunton/projects/rethinkChat/rethinkdb_data' did not already exist or is empty.)
+2015-11-17T16:14:02.180382000 0.004407s notice: Running rethinkdb 2.2.1 (CLANG 4.2 (clang-425.0.28))...
+2015-11-17T16:14:02.183682000 0.007707s notice: Running on Darwin 14.5.0 x86_64
+2015-11-17T16:14:02.183733000 0.007758s notice: Loading data from directory /Users/ahunton/projects/rethinkChat/rethinkdb_data
+2015-11-17T16:14:02.294684000 0.118709s info: Automatically using cache size of 421 MB
+2015-11-17T16:14:02.295130000 0.119155s notice: Listening for intracluster connections on port 29015
+2015-11-17T16:14:02.296385000 0.120410s notice: Listening for client driver connections on port 28015
+2015-11-17T16:14:02.296485000 0.120509s notice: Listening for administrative HTTP connections on port 8080
+2015-11-17T16:14:02.296488000 0.120513s notice: Listening on addresses: 127.0.0.1, ::1
+2015-11-17T16:14:02.296489000 0.120514s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2015-11-17T16:14:02.296492000 0.120517s notice: Server ready, "NAS_51PXG8WL_local_ogr" 8e527c45-91b4-417d-a911-0b580446ebed
+2015-11-17T16:14:50.976532000 48.804062s info: Table 9cd4b498-19e0-4a52-b37d-a9fbbe5d9f9c: Added replica on this server.
+2015-11-17T16:14:52.654804000 50.482486s info: Table 9cd4b498-19e0-4a52-b37d-a9fbbe5d9f9c: Starting a new Raft election for term 1.
+2015-11-17T16:14:52.681568000 50.509250s info: Table 9cd4b498-19e0-4a52-b37d-a9fbbe5d9f9c: This server is Raft leader for term 1. Latest log index is 0.
