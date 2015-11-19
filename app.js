@@ -15,17 +15,17 @@ var fs = require('fs');
 var path = require('path');
 
 
-require(path.join(__dirname, 'config/nconf')).init(nconf, path.join(__dirname, 'properties.json'));
+require(path.join(__dirname, 'server/config/nconf')).init(nconf, path.join(__dirname, 'properties.json'));
 
 
 
 // use adaro for all dust templates
-app.engine('dust', dust({cache: false, helpers: ['./helpers/dust_helpers.js']}));
+app.engine('dust', dust({cache: false, helpers: ['./server/helpers/dust_helpers.js']}));
 app.set('view engine', 'dust');
 
 
 app.disable('x-powered-by');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'server/views'));
 app.set('json spaces', 2);
 
 
@@ -175,7 +175,7 @@ var socketIOInit = function() {
 };
 
 
-require(path.join(__dirname, 'config/routes')).init(app, function(){
+require(path.join(__dirname, 'server/config/routes')).init(app, function(){
   server.listen(nconf.get('port'),'0.0.0.0', function(){
     console.log("Express server listening on port " + nconf.get('port'));
     
