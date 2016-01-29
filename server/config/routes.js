@@ -51,6 +51,7 @@ var resourceRoutes = function(server) {
   });
 };
 
+
 /**
  * Configure Routes
  * @param server - A hapi server

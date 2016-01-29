@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="/assets/socket.io/socket.io.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   <script src="/assets/js/chat{?minifyJS}.min{/minifyJS}.js"></script>
   <link rel="stylesheet" href="/assets/css/style.css"/>
     <title>ReThync Chat</title>
