@@ -38,15 +38,15 @@ const options = {
 //configure dust globals
 var dustGlobals = {};
 
+var RethinkDBConfig = {
+  host: nconf.get('rethinkDB-host'),
+  port: nconf.get('rethinkDB-port'),
+  db: nconf.get('rethinkDB-name')
+};
 
-
+console.log('RethinkDB properties', JSON.stringify(RethinkDBConfig));
 var connectToDB = function (callback) {
-  RethinkDB.connect({
-    host: nconf.get('rethinkDB-host'),
-    port: nconf.get('rethinkDB-port'),
-    db: nconf.get('rethinkDB-name')
-  }, callback);
-
+  RethinkDB.connect(RethinkDBConfig, callback);
 };
 
 var socketIOInit = function(io) {
