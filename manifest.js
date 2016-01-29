@@ -20,7 +20,24 @@ var manifest = {
     {plugin: 'crumb'},
     {plugin: 'vision'},
     {plugin: 'inert'},
-    {plugin: 'hapi-io'}
+    {plugin: 'hapi-io'},
+    {
+      plugin: {
+        register: "./plugins/chat/index.js",
+        options : {
+          rethink: {
+            host: nconf.get('rethinkDB-host'),
+            port: nconf.get('rethinkDB-port'),
+            db: nconf.get('rethinkDB-name'),
+          }
+        }
+      },
+      options: {
+        routes: {
+          prefix: '/chat'
+        }
+      }
+    }
   ]
 };
 
