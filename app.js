@@ -1,47 +1,22 @@
 'use strict';
-var http = require('http');
-var express = require('express');
-var app =  express();
-var server = require('http').createServer(app);
+const Glue = require('glue');
+var path = require('path');
+var fs = require('fs');
+var dust = require('dustjs-linkedin');
+
 var RethinkDB = require('rethinkdb');
 var nconf = require('nconf');
-
-//var expressValidator = require('./middleware/express_validator');
-var bodyParser = require('body-parser');
-var dust = require('adaro').dust;
-var staticAsset = require('static-asset');
-
-var fs = require('fs');
-var path = require('path');
-
 
 require(path.join(__dirname, 'server/config/nconf')).init(nconf, path.join(__dirname, 'properties.json'));
 
 
+// allow more event listeners, set to 0 to leave unrestriced
+process.setMaxListeners(nconf.get('max-listeners') || 0);
+process.maxTickDepth = nconf.get('max-tick-depth') || 400;
 
-// use adaro for all dust templates
-app.engine('dust', dust({cache: false, helpers: ['./server/helpers/dust_helpers.js']}));
-app.set('view engine', 'dust');
-
-
-app.disable('x-powered-by');
-app.set('views', path.join(__dirname, 'server/views'));
-app.set('json spaces', 2);
-
-
-// allow more event listeners, set to 0 to leave unrestricted
-process.setMaxListeners(0);
-process.maxTickDepth = 400;
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(staticAsset(path.join(__dirname, 'public')));
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-//app.use(expressValidator);
-
-app.use(function (err, req, res, next) {
-  console.log('Bubble Error: %s', err);
-  next(err);
+process.on('uncaughtException', function (err) {
+  console.log('Uncaught exception: ', JSON.stringify(err.stack));
+  throw err;
 });
 
 
@@ -53,12 +28,16 @@ process.on('exit', function(){
   server.close();
 });
 
-process.on('uncaughtException', function(err){
-  console.log(err)
-  server.close();
-});
 
 console.log('booting application on ' + process.pid.toString());
+
+const options = {
+  relativeTo: __dirname
+};
+
+//configure dust globals
+var dustGlobals = {};
+
 
 
 var connectToDB = function (callback) {
@@ -67,11 +46,10 @@ var connectToDB = function (callback) {
     port: nconf.get('rethinkDB-port'),
     db: nconf.get('rethinkDB-name')
   }, callback);
-  
+
 };
 
-var socketIOInit = function() {
-  var io = require('socket.io').listen(server);
+var socketIOInit = function(io) {
 
   io.sockets.on('connection', function (socket) {
     socket.on('create_message', function (data) {
@@ -80,10 +58,10 @@ var socketIOInit = function() {
           console.log(err);
         else
           data['time'] = RethinkDB.now();
-          RethinkDB.table('message').insert(data).run(conn, function (err) {
-            if (err)
-              console.log(err);
-          });
+        RethinkDB.table('message').insert(data).run(conn, function (err) {
+          if (err)
+            console.log(err);
+        });
       });
     });
 
@@ -171,16 +149,32 @@ var socketIOInit = function() {
         });
     });
   });
-  
+
 };
 
 
-require(path.join(__dirname, 'server/config/routes')).init(app, function(){
-  server.listen(nconf.get('port'),'0.0.0.0', function(){
-    console.log("Express server listening on port " + nconf.get('port'));
-    
-    socketIOInit();
-    console.log('Server Started.');
+Glue.compose(require('./manifest.js'), options, function(err, server){
+  //configure static files
+  if(err) {
+    throw err;
+  }
+
+  //init dust
+  require('./server/config/dust').init(server, dustGlobals);
+
+  require('./server/config/routes').init(server);
+
+  socketIOInit(server.plugins['hapi-io'].io);
+
+  server.start(function() {
+    console.log('Server running at:', server.info.uri);
+
   });
+
 });
+
+
+
+
+
 
