@@ -45,6 +45,12 @@ module.exports.register = (plugin, options, next) => {
 
   plugin.route({
     method: 'POST',
+    path: '/user/login',
+    config: users.loginUser()
+  });
+
+  plugin.route({
+    method: 'POST',
     path: '/user/create',
     config: users.createUser()
   });

@@ -46251,7 +46251,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
     //
     //$httpProvider.defaults.withCredentials = true;
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/chat');
 
     //supports optional trailing slash
     $urlMatcherFactoryProvider.strictMode(false);
@@ -46265,17 +46265,25 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
     //static
     $stateProvider
       .state('app', {
+        url: '/',
         views: {
           main: {
             templateUrl: 'templates/app',
             controller: 'RethinkChatCtrl'
           }
         }
-      });
-
-    $stateProvider
+      })
+      .state('app.login', {
+        url: 'login',
+        views: {
+          login: {
+            templateUrl: 'templates/components/login',
+            controller: 'UserCtrl'
+          }
+        }
+      })
       .state('app.home', {
-        url: '/',
+        url: 'chat',
         views: {
           chatterBox: {
             templateUrl: 'templates/components/chatter_box',
@@ -46288,10 +46296,96 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           rooms: {
             templateUrl: 'templates/components/rooms',
             controller: 'RoomsCtrl'
+          },
+          user: {
+            templateUrl: 'templates/components/logout',
+            controller: 'UserCtrl'
           }
+        },
+        resolve: {
+          auth: ["$q", "RethinkAuth", function($q, RethinkAuth) {
+            var userInfo = RethinkAuth.getUser();
+
+            if (userInfo) {
+              return $q.when(userInfo);
+            } else {
+              return $q.reject({ authenticated: false });
+            }
+          }]
         }
       });
   }
+
+  ueAdmin.controller('MainCtrl', ['$rootScope', '$state', function($rootScope, $state){
+    $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+      if (error.authenticated === false) {
+        event.preventDefault();
+        $state.go('app.login');
+      }
+    });
+
+    $rootScope.$on('$viewContentLoaded', function () {
+
+
+    });
+
+    $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+    });
+  }]);
+  ueAdmin.factory('RethinkAuth', ['$rootScope','$http', '$q', '$window', 'crumb', function ($rootScope, $http, $q, $window, crumb) {
+    var _user;
+
+    var updateUser = function (userDetails) {
+
+    };
+
+    function init() {
+      if($window.sessionStorage["RethinkUser"]){
+        try {
+          _user = JSON.parse($window.sessionStorage["RethinkUser"]);
+        } catch (e) {
+          console.log('Unable to parse RethinkUser');
+        }
+      }
+    }
+
+    init();
+
+    return {
+      getUser: function () {
+        return _user;
+      },
+      login: function (userName, password, callback) {
+
+        $http.post("/chat/user/login", {
+          login: userName,
+          password: password,
+          crumb: crumb
+        }).then(function (result) {
+          result.data = result.data ||{};
+          if(result.data.errors) return callback(result.data.errors);
+
+          _user = {
+            token: result.data.token,
+            userName: result.data.userName
+          };
+          $window.sessionStorage["RethinkUser"] = JSON.stringify(_user);
+          $rootScope.$broadcast('UserLoginChanged');
+          callback(null, _user);
+        }, function (error) {
+          callback(error);
+        });
+      }
+      ,
+      logout: function () {
+        _user = null;
+        localStorage.removeItem('RethinkUser');
+        $rootScope.$broadcast('UserLoginChanged');
+      }
+    }
+  }
+  ]);
+
 
 })();
 ;(function () {
@@ -46368,33 +46462,66 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 ;(function () {
   'use strict';
 
+  angular.module('rethink.chat.user', [
+    ])
+    .controller('UserCtrl', ['$state', '$rootScope', '$scope', '$http', 'socketio', 'RethinkAuth', UserCtrl]);
+
+  function UserCtrl($state, $rootScope, $scope, $http, socketio, RethinkAuth) {
+    $scope.chat.currentUser = RethinkAuth.getUser();
+    $scope.logout = function() {
+      RethinkAuth.logout();
+    };
+
+    var loginCallback = function (err, user){
+      if(err){
+        alert(err);
+      }
+    };
+
+    $scope.login = function(){
+      var user = $scope.user;
+
+      if(!user || !user.email || !user.password){
+        return;
+      }
+
+      RethinkAuth.login(user.email, user.password, loginCallback);
+
+
+    };
+    $scope.register = function(){
+      var user = $scope.user;
+      if(!user || !user.email || !user.password || (user.password !== user.verifyPassword)){
+        return;
+      }
+
+      socketio.emit("create_user", {login: user.email, password: user.password});
+      setTimeout(function() {
+        RethinkAuth.login(user.email, user.password, loginCallback);
+      }, 500);
+    };
+
+    $rootScope.$on('UserLoginChanged', function(){
+      $scope.chat.currentUser = RethinkAuth.getUser();
+    });
+
+  }
+})();
+;(function () {
+  'use strict';
+
   var ueAdmin = angular.module('rethink.chat', [
     'rethink.chat.messagebox',
     'rethink.chat.rooms',
-    'rethink.chat.chatterbox'
+    'rethink.chat.chatterbox',
+    'rethink.chat.user'
   ]);
-  ueAdmin.controller('RethinkChatCtrl', ['$rootScope', '$scope', RethinkChatCtrl]);
+  ueAdmin.controller('RethinkChatCtrl', ['$rootScope', '$scope','RethinkAuth', RethinkChatCtrl]);
 
-  function RethinkChatCtrl($rootScope, $scope) {
+  function RethinkChatCtrl($rootScope, $scope, RethinkAuth) {
 
     $scope.chat = {
     };
-
-
-
-
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-
-
-    });
-
-    $rootScope.$on('$viewContentLoaded', function () {
-
-
-    });
-
-    $scope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-    });
   }
 
 })();

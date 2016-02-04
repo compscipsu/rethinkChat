@@ -1,0 +1,36 @@
+<div class="login-container">
+
+  <div class="login-box">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="info">
+          <img class="img-responsive" src="/assets/images/rethink_logo.png" />
+          <h3 class="welcome">Welcome</h3>
+          <p class="welcome-sub">It's time to rethink chat.</p>
+
+          <ul>
+            <li>Real time updates</li>
+            <li>Public Rooms</li>
+            <li>Private Rooms</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="login" ng-class="{'sign-up': signUp}">
+          <h4 class="login-heading">
+            <span ng-class="{active: !signUp}" ng-click="signUp = false;">Login</span>
+            /
+            <span ng-class="{active: signUp}" ng-click="signUp = true;">Sign Up</span>
+          </h4>
+
+          <input type="email" class="form-control" placeholder="Email" ng-model="user.email"/>
+          <input type="password" class="form-control" placeholder="Password" ng-model="user.password"/>
+          <input type="password" class="form-control verify-password" placeholder="Verify Password"
+                 ng-model="user.verifyPassword"/>
+            <button class="btn btn-primary-outline pull-right" ng-click="signUp ? register() : login()">Submit</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

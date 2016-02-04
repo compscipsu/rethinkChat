@@ -1,8 +1,5 @@
-<div class="container-fluid wrapper">
-  <div class="rooms" ui-view="rooms"></div>
-  <div class="message-content">
-    <h2 class="room-header">{{ chat.currentRoom.name }}</h2>
-    <div ui-view="messageList" class="message-list"></div>
-  </div>
-  <div ui-view="chatterBox" class="chatter-box"></div>
-</div>
+<div ui-view="rooms"></div>
+<div ui-view="user"></div>
+<div ui-view="messageList"></div>
+<div ui-view="chatterBox"></div>
+<div ui-view="login"></div>

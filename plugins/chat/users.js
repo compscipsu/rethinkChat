@@ -34,22 +34,25 @@ exports.loginUser = function () {
   return {
     handler: (request, reply) => {
       var data = {
-        login: request.payload['login'],
-        password: request.payload['password']
+        login: request.payload.login,
+        password: request.payload.password
       };
 
-      rethink.count('user', data, new function(err, cursor) {
-        if (err)
-          console.log(err);
-        else
-          cursor.each(function (err, row) {
-            if (err)
-              console.log(err);
+      rethink.getData('user', data, rethink.sortAsc('login'), new function(err, cursor) {
+        if (err) return reply({errors: ['an error occured while trying to find user']});
+        else if(!cursor) return reply({errors:['User not found']});
+
+        var user = {};
+        cursor.each(function (err, row) {
+          if (err)
+            console.log(err);
 
 
-            //TODO
-          });
-      })
+          //TODO
+        });
+
+        return reply(user);
+      });
     }
   };
 };
