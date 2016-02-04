@@ -8,7 +8,8 @@
   </div>
 
   <div class="input-group">
-    <input type="text" ng-model="newRoom" class="form-control" placeholder="Room Name"/>
+    <input type="text" ng-model="newRoom" class="form-control" placeholder="Room Name"
+           ng-keypress="$event.which === 13 ? addRoom() : null"/>
     <span class="input-group-btn">
       <button class="btn btn-primary" ng-click="addRoom()"><i class="fa fa-plus"></i></button>
     </span>

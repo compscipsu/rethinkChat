@@ -8,7 +8,7 @@
   function ChatterBoxCtrl($state, $rootScope, $scope, socketio) {
     $scope.chat.author = 'anonymous';
     $scope.postMessage = function() {
-      if(!$scope.message) {
+      if(!$scope.message || !$scope.chat.currentRoom) {
         return;
       }
       socketio.emit("create_message", {message: $scope.message, room: $scope.chat.currentRoom.name, author: $scope.chat.currentUser.userName});

@@ -28,7 +28,7 @@ exports.createRoom = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Create room");
+      //console.log("Create room");
       reply();
     }
   };
@@ -61,7 +61,7 @@ exports.joinRoom = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Join room");
+      //console.log("Join room");
       reply();
     }
   };
@@ -91,7 +91,7 @@ exports.getPublicRooms = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Get Public Room");
+      //console.log("Get Public Room");
       reply();
     }
   };
@@ -121,7 +121,7 @@ exports.getPrivateRooms = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Get Private Room");
+      //console.log("Get Private Room");
       reply();
 
     }
@@ -145,7 +145,7 @@ exports.addSubscriber = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Get Private Room");
+      //console.log("Get Private Room");
       reply();
     }
   };

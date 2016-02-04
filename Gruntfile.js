@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
   
   var vendorJSFiles = [
+    'client/vendor/jquery.js',
     'client/vendor/angular.js',
     'client/vendor/angular-sanitize.js',
     'client/vendor/angular-idle.js',

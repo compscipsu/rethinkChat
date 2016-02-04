@@ -26,7 +26,7 @@ exports.createMessage = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Create Message");
+      //console.log("Create Message");
       reply();
     }
   };

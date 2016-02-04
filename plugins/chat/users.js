@@ -25,7 +25,7 @@ exports.createUser = function () {
       }
     },
     handler: (request, reply) => {
-      console.log("Create User");
+      //console.log("Create User");
       reply();
     }
   };
