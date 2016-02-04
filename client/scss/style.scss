@@ -1,0 +1,71 @@
+@import "bootstrap/bootstrap";
+@import "variables";
+
+body {
+  font-size: 16px;
+}
+
+img {
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.rooms {
+  background-color: $charcoal;
+  width: 25%;
+  position:fixed;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  color: white;
+  padding: .8rem;
+
+  .rooms-list{
+    margin: 1rem 0;
+    .room {
+      margin-left:.5rem;
+      cursor: pointer;
+    }
+  }
+}
+
+.message-content {
+  width: 75%;
+  float: right;
+  .room-header{
+    padding-left: 1rem;
+  }
+  .message-list {
+    padding: 0 2rem 6rem;
+    margin: 0;
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      .message {
+        margin-bottom: 1rem;
+        display: block;
+        .author {
+          font-size: .7rem;
+        }
+        .text {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+.chatter-box {
+  background: $charcoal_light;
+  padding: 1rem;
+  margin: 0;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 75%;
+
+  .message-input {
+    //border-color: ;
+  }
+}
+

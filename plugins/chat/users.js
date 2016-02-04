@@ -22,8 +22,9 @@ exports.createUser = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Create User");
+      reply();
     }
   };
 };
@@ -31,7 +32,7 @@ exports.createUser = function () {
 
 exports.loginUser = function () {
   return {
-    handler: (request, response) => {
+    handler: (request, reply) => {
       var data = {
         login: request.payload['login'],
         password: request.payload['password']

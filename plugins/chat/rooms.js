@@ -9,13 +9,13 @@ exports.createRoom = function () {
         event: 'create_room',
         post: function(ctx, next) {
           ctx.socket.leaveAll();
-          ctx.socket.join(ctx.data['name'])
+          ctx.socket.join(ctx.data['name']);
 
           var data = {
-            name: ctx.data['room'],
-            visibility: ctx.data['visibility'] ? ctx.data['visibility'] : 'public',
-            owner: ctx.data['owner'] ? ctx.data['owner'] : 'jrausch@morphotrust.com',
-            subscribers: [ctx.data['owner'] ? ctx.data['owner'] : 'jrausch@morphotrust.com']
+            name: ctx.data.name,
+            visibility: ctx.data.visibility ? ctx.data.visibility : 'public',
+            owner: ctx.data.owner ? ctx.data.owner : 'jrausch@morphotrust.com',
+            subscribers: [ctx.data.owner ? ctx.data.owner : 'jrausch@morphotrust.com']
           };
 
           rethink.writeToTable('room', data, function (err) {
@@ -27,8 +27,9 @@ exports.createRoom = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Create room");
+      reply();
     }
   };
 };
@@ -59,8 +60,9 @@ exports.joinRoom = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Join room");
+      reply();
     }
   };
 };
@@ -69,7 +71,7 @@ exports.getPublicRooms = function () {
   return {
     plugins: {
       'hapi-io': {
-        event: 'publicRooms',
+        event: 'public_rooms',
         post: function(ctx, next) {
 
           rethink.getData('room', {visibility: 'public'}, rethink.sortAsc('name'), function (err, cursor) {
@@ -80,7 +82,7 @@ exports.getPublicRooms = function () {
                 if (err)
                   console.log(err);
 
-                socket.emit("add_room", {message: row['name']})
+                ctx.socket.emit("add_room", {name: row.name})
               });
           });
 
@@ -88,8 +90,9 @@ exports.getPublicRooms = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Get Public Room");
+      reply();
     }
   };
 };
@@ -117,8 +120,10 @@ exports.getPrivateRooms = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Get Private Room");
+      reply();
+
     }
   };
 };
@@ -139,8 +144,9 @@ exports.addSubscriber = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Get Private Room");
+      reply();
     }
   };
 };

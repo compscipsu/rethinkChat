@@ -10,9 +10,9 @@ exports.createMessage = function () {
         post: function(ctx, next) {
 
           var data = {
-            author: ctx.data['author'],
-            message: ctx.data['message'],
-            room: ctx.data['room'],
+            author: ctx.data.author,
+            message: ctx.data.message,
+            room: ctx.data.room,
             time: rethink.now()
           };
 
@@ -25,8 +25,9 @@ exports.createMessage = function () {
         }
       }
     },
-    handler: (request, response) => {
+    handler: (request, reply) => {
       console.log("Create Message");
+      reply();
     }
   };
 };

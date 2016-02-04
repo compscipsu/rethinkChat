@@ -2,6 +2,7 @@
 var nconf = require('nconf');
 
 exports.renderLayout = function (request, reply) {
+  //reply.view('angular2');
   reply.view('layout', {
     host: nconf.get('host'),
     port: nconf.get('port'),

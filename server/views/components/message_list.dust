@@ -1,0 +1,6 @@
+<ul>
+  <li class="message" ng-repeat="message in chat.messages">
+    <p class="text">{{ message.message }}</p>
+    <span class="author"><strong>author:</strong> {{ message.author }} ({{ message.time }})</span>
+  </li>
+</ul>
