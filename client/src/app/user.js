@@ -15,6 +15,7 @@
       if(err){
         alert(err);
       }
+      $state.go('app.home');
     };
 
     $scope.login = function(){

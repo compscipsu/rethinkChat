@@ -1,15 +1,17 @@
 <div class="rooms">
   <h2>Rooms</h2>
 
-  <div class="rooms-list" ng-repeat="room in chat.rooms">
-    <h4 class="room" ng-click="enterRoom(room)">{{ room.name }}</h4>
+  <div class="rooms-list" >
+    <span class="room" ng-class="{active: room.active}" ng-click="enterRoom(room)" ng-repeat="room in chat.rooms">
+      {{ room.name }}
+    </span>
   </div>
 
   <div class="input-group">
     <input type="text" ng-model="newRoom" class="form-control" placeholder="Room Name"/>
-  <span class="input-group-btn">
-    <button class="btn btn-default" ng-click="addRoom()"><i class="fa fa-plus"></i></button>
-  </span>
+    <span class="input-group-btn">
+      <button class="btn btn-primary" ng-click="addRoom()"><i class="fa fa-plus"></i></button>
+    </span>
   </div>
 </div>
 

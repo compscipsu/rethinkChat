@@ -9,6 +9,8 @@
     socketio.on("add_message", function (data) {
       data.time = moment(data.time).format("MM/DD/YYYY HH:mm");
       $scope.chat.messages.push(data);
+
+      $scope.chat.loading = false;
       $scope.$apply();
 
 

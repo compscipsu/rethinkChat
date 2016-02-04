@@ -132,8 +132,8 @@
             userName: result.data.login.split('@')[0]
           };
           $window.sessionStorage["RethinkUser"] = JSON.stringify(_user);
-          $rootScope.$broadcast('UserLoginChanged');
           callback(null, _user);
+          $rootScope.$broadcast('UserLoginChanged');
         }, function (error) {
           callback(error);
         });

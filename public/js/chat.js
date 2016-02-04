@@ -46370,8 +46370,8 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
             userName: result.data.login.split('@')[0]
           };
           $window.sessionStorage["RethinkUser"] = JSON.stringify(_user);
-          $rootScope.$broadcast('UserLoginChanged');
           callback(null, _user);
+          $rootScope.$broadcast('UserLoginChanged');
         }, function (error) {
           callback(error);
         });
@@ -46401,8 +46401,8 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
       if(!$scope.message) {
         return;
       }
-      socketio.emit("create_message", {message: $scope.message, room: $scope.chat.currentRoom.name, author: $scope.chat.author});
-      $scope.chat.message = '';
+      socketio.emit("create_message", {message: $scope.message, room: $scope.chat.currentRoom.name, author: $scope.chat.currentUser.userName});
+      $scope.message = '';
     }
   }
 })();
@@ -46417,6 +46417,8 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
     socketio.on("add_message", function (data) {
       data.time = moment(data.time).format("MM/DD/YYYY HH:mm");
       $scope.chat.messages.push(data);
+
+      $scope.chat.loading = false;
       $scope.$apply();
 
 
@@ -46445,6 +46447,22 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
     };
 
     $scope.enterRoom = function (room) {
+      var currentRoom = _.findWhere($scope.chat.rooms, {active: true}) || {};
+
+      if(currentRoom.name === room.name) return;
+
+      $scope.chat.loading = true;
+
+      setTimeout(function() {
+        $scope.chat.loading = false;
+        $scope.$apply()
+      }, 4000);
+
+      currentRoom.active = false;
+
+      $scope.chat.messages = [];
+
+      room.active = true;
       $scope.chat.currentRoom = room;
       socketio.emit("join_room", {name: room.name});
     };
@@ -46456,7 +46474,6 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
       $scope.chat.rooms.push(data);
       $scope.$apply();
     });
-
   }
 })();
 ;(function () {
@@ -46476,6 +46493,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
       if(err){
         alert(err);
       }
+      $state.go('app.home');
     };
 
     $scope.login = function(){

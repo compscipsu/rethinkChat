@@ -17,6 +17,22 @@
     };
 
     $scope.enterRoom = function (room) {
+      var currentRoom = _.findWhere($scope.chat.rooms, {active: true}) || {};
+
+      if(currentRoom.name === room.name) return;
+
+      $scope.chat.loading = true;
+
+      setTimeout(function() {
+        $scope.chat.loading = false;
+        $scope.$apply()
+      }, 4000);
+
+      currentRoom.active = false;
+
+      $scope.chat.messages = [];
+
+      room.active = true;
       $scope.chat.currentRoom = room;
       socketio.emit("join_room", {name: room.name});
     };
@@ -28,6 +44,5 @@
       $scope.chat.rooms.push(data);
       $scope.$apply();
     });
-
   }
 })();

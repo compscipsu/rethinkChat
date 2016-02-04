@@ -1,11 +1,17 @@
 <div class="message-content">
-<h2 class="room-header">{{ chat.currentRoom.name }}</h2>
+  <div class="message-list">
+    <ul>
+      <li class="message" ng-repeat="message in chat.messages">
+        <p class="text">{{ message.message }}</p>
+        <span class="author"><strong>author:</strong> {{ message.author }} ({{ message.time }})</span>
+      </li>
+    </ul>
+  </div>
 </div>
-<div class="message-list">
-  <ul>
-    <li class="message" ng-repeat="message in chat.messages">
-      <p class="text">{{ message.message }}</p>
-      <span class="author"><strong>author:</strong> {{ message.author }} ({{ message.time }})</span>
-    </li>
-  </ul>
+
+<div id="loading" ng-class="{active: chat.loading}">
+    <div class="circle"></div>
+    <div class="circle-spinner"></div>
 </div>
+
+

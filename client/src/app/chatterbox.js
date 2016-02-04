@@ -11,8 +11,8 @@
       if(!$scope.message) {
         return;
       }
-      socketio.emit("create_message", {message: $scope.message, room: $scope.chat.currentRoom.name, author: $scope.chat.author});
-      $scope.chat.message = '';
+      socketio.emit("create_message", {message: $scope.message, room: $scope.chat.currentRoom.name, author: $scope.chat.currentUser.userName});
+      $scope.message = '';
     }
   }
 })();
