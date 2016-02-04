@@ -128,8 +128,8 @@
           if(result.data.errors) return callback(result.data.errors);
 
           _user = {
-            token: result.data.token,
-            userName: result.data.userName
+            login: result.data.login,
+            userName: result.data.login.split('@')[0]
           };
           $window.sessionStorage["RethinkUser"] = JSON.stringify(_user);
           $rootScope.$broadcast('UserLoginChanged');
