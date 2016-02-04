@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 var rethink = require('./rethinkdb.js');
 
 exports.createUser = function () {
@@ -38,20 +40,24 @@ exports.loginUser = function () {
         password: request.payload.password
       };
 
-      rethink.getData('user', data, rethink.sortAsc('login'), new function(err, cursor) {
-        if (err) return reply({errors: ['an error occured while trying to find user']});
-        else if(!cursor) return reply({errors:['User not found']});
+      rethink.getData('user', data, null, function(err, cursor) {
+        if (err) {
+          return reply({errors: ['an error occured while trying to find user']});
+        }
+        else if(!cursor) {
+          return reply({errors: ['User not found']});
+        }
 
         var user = {};
         cursor.each(function (err, row) {
           if (err)
             console.log(err);
 
-
-          //TODO
+          user.login = row.login;
+        }, () => {
+          return reply(user);
         });
 
-        return reply(user);
       });
     }
   };

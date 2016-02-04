@@ -31,9 +31,15 @@ exports.writeToTable = (table, data, callback) => {
 exports.getData = (table, filter, sort, callback) => {
   connectToDB(function (err, conn) {
     if (filter) {
-      RethinkDB.table(table).filter(filter).orderBy(sort).run(conn, callback);
-    } else {
+      if (sort) {
+        RethinkDB.table(table).filter(filter).orderBy(sort).run(conn, callback);
+      } else {
+        RethinkDB.table(table).filter(filter).run(conn, callback);
+      }
+    } else if (sort) {
       RethinkDB.table(table).orderBy(sort).run(conn, callback);
+    } else {
+      RethinkDB.table(table).run(conn, callback);
     }
   });
 };
