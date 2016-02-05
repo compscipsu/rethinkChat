@@ -127,6 +127,8 @@
           result.data = result.data ||{};
           if(result.data.errors) return callback(result.data.errors);
 
+          if(!result.data.login) return callback('No user found');
+
           _user = {
             login: result.data.login,
             userName: result.data.login.split('@')[0]

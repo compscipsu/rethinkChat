@@ -7,6 +7,9 @@
   function MessageListCtrl($state, $rootScope, $scope, $location, socketio) {
     $scope.chat.messages = [];
     socketio.on("add_message", function (data) {
+
+      if(_.find($scope.chat.messages, function(message){return _.isEqual(data, message)})) return;
+
       data.time = moment(data.time).format("MM/DD/YYYY HH:mm");
       $scope.chat.messages.push(data);
 

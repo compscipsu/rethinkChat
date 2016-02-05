@@ -42,7 +42,7 @@ exports.joinRoom = function () {
         event: 'join_room',
         post: function(ctx, next) {
           ctx.socket.leaveAll();
-          ctx.socket.join(ctx.data['name'])
+          ctx.socket.join(ctx.data['name']);
 
           rethink.getData('message', {room: ctx.data['name']}, rethink.sortAsc('time'), function (err, cursor) {
             if (err)

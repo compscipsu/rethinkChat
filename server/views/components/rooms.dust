@@ -7,10 +7,14 @@
     </span>
   </div>
 
-  <div class="input-group">
-    <input type="text" ng-model="newRoom" class="form-control" placeholder="Room Name"
-           ng-keypress="$event.which === 13 ? addRoom() : null"/>
-    <span class="input-group-btn">
+  <div class="input-group create-room">
+    <input type="text" ng-model="newRoom" class="form-control" placeholder="Room Name"/>
+    {!<span class="input-group-addon private-room">!}
+      {!<input type="checkbox" ng-model="isPrivate" ng-true-value="true" ng-false-value="false"> {~s}!}
+      {!<i class="fa fa-eye-slash"></i>!}
+
+    {!</span>!}
+    <span class="input-group-btn create-btn">
       <button class="btn btn-primary" ng-click="addRoom()"><i class="fa fa-plus"></i></button>
     </span>
   </div>

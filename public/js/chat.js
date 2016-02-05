@@ -57393,6 +57393,8 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           result.data = result.data ||{};
           if(result.data.errors) return callback(result.data.errors);
 
+          if(!result.data.login) return callback('No user found');
+
           _user = {
             login: result.data.login,
             userName: result.data.login.split('@')[0]
@@ -57443,6 +57445,9 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
   function MessageListCtrl($state, $rootScope, $scope, $location, socketio) {
     $scope.chat.messages = [];
     socketio.on("add_message", function (data) {
+
+      if(_.find($scope.chat.messages, function(message){return _.isEqual(data, message)})) return;
+
       data.time = moment(data.time).format("MM/DD/YYYY HH:mm");
       $scope.chat.messages.push(data);
 
@@ -57464,14 +57469,13 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 ;(function () {
   'use strict';
 
-  angular.module('rethink.chat.rooms', [
-    ])
+  angular.module('rethink.chat.rooms', [])
     .controller('RoomsCtrl', ['$state', '$rootScope', '$scope', 'socketio', RoomsCtrl]);
 
   function RoomsCtrl($state, $rootScope, $scope, socketio) {
     $scope.chat.rooms = [];
-    $scope.addRoom = function() {
-      if(!$scope.newRoom){
+    $scope.addRoom = function () {
+      if (!$scope.newRoom) {
         return;
       }
 
@@ -57482,14 +57486,14 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
     $scope.enterRoom = function (room) {
       var currentRoom = _.findWhere($scope.chat.rooms, {active: true}) || {};
 
-      if(currentRoom.name === room.name) return;
+      if (currentRoom.name === room.name) return;
 
       $scope.chat.loading = true;
 
-      setTimeout(function() {
+      setTimeout(function () {
         $scope.chat.loading = false;
         $scope.$apply()
-      }, 4000);
+      }, 1500);
 
       currentRoom.active = false;
 
@@ -57503,36 +57507,37 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
     socketio.emit('public_rooms', {});
 
     socketio.on("add_room", function (data) {
+      if (_.findWhere($scope.chat.rooms, {id: data.id})) return;
 
-      $scope.chat.rooms.push(data);
-      $scope.$apply();
+      $scope.$apply(function () {
+        $scope.chat.rooms.push(data);
+      });
     });
   }
 })();
 ;(function () {
   'use strict';
 
-  angular.module('rethink.chat.user', [
-    ])
+  angular.module('rethink.chat.user', [])
     .controller('UserCtrl', ['$state', '$rootScope', '$scope', '$http', 'socketio', 'RethinkAuth', UserCtrl]);
 
   function UserCtrl($state, $rootScope, $scope, $http, socketio, RethinkAuth) {
     $scope.chat.currentUser = RethinkAuth.getUser();
-    $scope.logout = function() {
+    $scope.logout = function () {
       RethinkAuth.logout();
     };
 
-    var loginCallback = function (err, user){
-      if(err){
+    var loginCallback = function (err, user) {
+      if (err) {
         alert(err);
       }
       $state.go('app.home');
     };
 
-    $scope.login = function(){
+    $scope.login = function () {
       var user = $scope.user;
 
-      if(!user || !user.email || !user.password){
+      if (!user || !user.email || !user.password) {
         return;
       }
 
@@ -57540,19 +57545,29 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 
 
     };
-    $scope.register = function(){
+    $scope.register = function () {
       var user = $scope.user;
-      if(!user || !user.email || !user.password || (user.password !== user.verifyPassword)){
+      if (!user || !user.email || !user.password || (user.password !== user.verifyPassword)) {
         return;
       }
 
-      socketio.emit("create_user", {login: user.email, password: user.password});
-      setTimeout(function() {
+      var data = {
+        login: user.email,
+        password: user.password,
+        crumb: crumb
+      };
+
+      $http.post("/chat/user/create", data).then(function (result) {
+        result.data = result.data || {};
+        if (result.data.errors) return alert(JSON.stringify(result.data.errors));
         RethinkAuth.login(user.email, user.password, loginCallback);
-      }, 500);
+      }, function (error) {
+        callback(error);
+      });
+
     };
 
-    $rootScope.$on('UserLoginChanged', function(){
+    $rootScope.$on('UserLoginChanged', function () {
       $scope.chat.currentUser = RethinkAuth.getUser();
     });
 

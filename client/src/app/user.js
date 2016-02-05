@@ -1,27 +1,26 @@
 (function () {
   'use strict';
 
-  angular.module('rethink.chat.user', [
-    ])
+  angular.module('rethink.chat.user', [])
     .controller('UserCtrl', ['$state', '$rootScope', '$scope', '$http', 'socketio', 'RethinkAuth', UserCtrl]);
 
   function UserCtrl($state, $rootScope, $scope, $http, socketio, RethinkAuth) {
     $scope.chat.currentUser = RethinkAuth.getUser();
-    $scope.logout = function() {
+    $scope.logout = function () {
       RethinkAuth.logout();
     };
 
-    var loginCallback = function (err, user){
-      if(err){
+    var loginCallback = function (err, user) {
+      if (err) {
         alert(err);
       }
       $state.go('app.home');
     };
 
-    $scope.login = function(){
+    $scope.login = function () {
       var user = $scope.user;
 
-      if(!user || !user.email || !user.password){
+      if (!user || !user.email || !user.password) {
         return;
       }
 
@@ -29,19 +28,29 @@
 
 
     };
-    $scope.register = function(){
+    $scope.register = function () {
       var user = $scope.user;
-      if(!user || !user.email || !user.password || (user.password !== user.verifyPassword)){
+      if (!user || !user.email || !user.password || (user.password !== user.verifyPassword)) {
         return;
       }
 
-      socketio.emit("create_user", {login: user.email, password: user.password});
-      setTimeout(function() {
+      var data = {
+        login: user.email,
+        password: user.password,
+        crumb: crumb
+      };
+
+      $http.post("/chat/user/create", data).then(function (result) {
+        result.data = result.data || {};
+        if (result.data.errors) return alert(JSON.stringify(result.data.errors));
         RethinkAuth.login(user.email, user.password, loginCallback);
-      }, 500);
+      }, function (error) {
+        callback(error);
+      });
+
     };
 
-    $rootScope.$on('UserLoginChanged', function(){
+    $rootScope.$on('UserLoginChanged', function () {
       $scope.chat.currentUser = RethinkAuth.getUser();
     });
 
