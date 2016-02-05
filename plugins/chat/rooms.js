@@ -82,7 +82,7 @@ exports.getPublicRooms = function () {
                 if (err)
                   console.log(err);
 
-                ctx.socket.emit("add_room", {name: row.name})
+                ctx.socket.emit("add_room", {id: row['id'], name: row['name'], owner: row['owner'], subscribers: row['subscribers']})
               });
           });
 
@@ -112,7 +112,7 @@ exports.getPrivateRooms = function () {
                 if (err)
                   console.log(err);
 
-                socket.emit("add_private_room", {id: row['id'], message: row['name'], owner: row['owner'], subscribers: row['subscribers']})
+                socket.emit("add_private_room", {id: row['id'], name: row['name'], owner: row['owner'], subscribers: row['subscribers']})
               });
           });
 
