@@ -15,7 +15,7 @@ exports.init = function(options) {
 
 exports.subscribeToChanges = (table, options, callback) => {
   connectToDB(function (err, conn) {
-    RethinkDB.table(table).changes(options).run(conn, callback);
+    //RethinkDB.table(table).changes(options).run(conn, callback);
   });
 };
 
