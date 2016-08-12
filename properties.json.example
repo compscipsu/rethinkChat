@@ -1,6 +1,3 @@
 {
-  "env": "DEV",
-  "port": "1337",
-  "js-minify": false,
-  "dev-mode": true
+  "rethinkDB-host": "http://nas-mj010yts/"
 }
