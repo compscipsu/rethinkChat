@@ -23,7 +23,7 @@ module.exports.register = (plugin, options, next) => {
         plugins: {
           'hapi-io': {
             event: 'create_message',
-            post: messages.createMessage()
+            post: messages.createMessage
           }
         },
         handler: (request, reply) => {
@@ -42,7 +42,7 @@ module.exports.register = (plugin, options, next) => {
     method: 'POST',
     path: '/user/login',
     config: {
-      handler: users.loginUser()
+      handler: users.loginUser
     }
   });
 
