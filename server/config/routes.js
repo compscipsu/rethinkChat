@@ -1,7 +1,5 @@
 'use strict';
-var staticController = require('./../controllers/static_controller');
 var sessionController = require('./../controllers/session_controller');
-var resourceController = require('./../controllers/resource_controller');
 var errorController = require('./../controllers/error_controller');
 
 
@@ -10,19 +8,6 @@ var sessionRoutes = function(server){
     method: 'GET',
     path: '/logout',
     handler: sessionController.logout
-  });
-};
-
-var staticRoutes = function(server) {
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: staticController.renderLayout
-  });
-  server.route({
-    method: 'GET',
-    path: '/templates/{path*}',
-    handler: staticController.getTemplate
   });
 };
 
@@ -35,19 +20,6 @@ var assetRoutes = function(server) {
         path: '../public'
       }
     }
-  });
-};
-
-var resourceRoutes = function(server) {
-  server.route({
-    method: 'GET',
-    path: '/resource/nconf',
-    handler: resourceController.nconf
-  });
-  server.route({
-    method: 'GET',
-    path: '/resource/config',
-    handler: resourceController.config
   });
 };
 

@@ -1,5 +1,0 @@
-<div ui-view="rooms"></div>
-<div ui-view="user"></div>
-<div ui-view="messageList"></div>
-<div ui-view="chatterBox"></div>
-<div ui-view="login"></div>

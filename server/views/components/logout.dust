@@ -1,3 +1,0 @@
-<div class="user-logout">
-  <a ui-sref="app.login" ng-click="logout()">Logout {{ chat.currentUser.userName }}</a>
-</div>

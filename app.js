@@ -2,7 +2,6 @@
 const Glue = require('glue');
 var path = require('path');
 var fs = require('fs');
-var dust = require('dustjs-linkedin');
 
 
 var nconf = require('nconf');
@@ -35,17 +34,12 @@ const options = {
   relativeTo: __dirname
 };
 
-//configure dust globals
-var dustGlobals = {};
 
 Glue.compose(require('./manifest.js'), options, function(err, server){
   //configure static files
   if(err) {
     throw err;
   }
-
-  //init dust
-  require('./server/config/dust').init(server, dustGlobals);
 
   require('./server/config/routes').init(server);
 

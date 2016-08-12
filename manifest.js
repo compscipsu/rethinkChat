@@ -17,9 +17,6 @@ var manifest = {
     }
   ],
   registrations: [
-    {plugin: 'crumb'},
-    {plugin: 'vision'},
-    {plugin: 'inert'},
     {plugin: 'hapi-io'},
     {
       plugin: {
